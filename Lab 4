@@ -1,0 +1,47 @@
+postgres=# SELECT * FROM Uni;
+ id | name  | age |     email     | faculty
+----+-------+-----+---------------+---------
+  1 | Malik |  19 | Malik@auca.kg | AMI
+  2 | Adil  |  19 | Adil@auca.kg  | AMI
+(2 rows)
+
+
+postgres=# INSERT INTO Uni (name, age, email, faculty) VALUES ('Alice', 21, 'alice@auca.kg', 'BA'), ('Bob', 23, 'bob@auca.kg', 'SWI');
+INSERT 0 2
+postgres=# SELECT * FROM Uni;
+ id | name  | age |     email     | faculty
+----+-------+-----+---------------+---------
+  1 | Malik |  19 | Malik@auca.kg | AMI
+  2 | Adil  |  19 | Adil@auca.kg  | AMI
+  3 | Alice |  21 | alice@auca.kg | BA
+  4 | Bob   |  23 | bob@auca.kg   | SWI
+(4 rows)
+
+
+postgres=# SELECT name, email FROM Uni WHERE name = 'Malic';
+ name | email
+------+-------
+(0 rows)
+
+
+postgres=# SELECT name, email FROM Uni WHERE name = 'Malik';
+ name  |     email
+-------+---------------
+ Malik | Malik@auca.kg
+(1 row)
+postgres=# SELECT name, email FROM Uni ORDER BY name;
+ name  |     email
+-------+---------------
+ Adil  | Adil@auca.kg
+ Alice | alice@auca.kg
+ Bob   | bob@auca.kg
+ Malik | Malik@auca.kg
+(4 rows)
+
+
+postgres=# SELECT name, email FROM Uni LIMIT 2;
+ name  |     email
+-------+---------------
+ Malik | Malik@auca.kg
+ Adil  | Adil@auca.kg
+(2 rows)
