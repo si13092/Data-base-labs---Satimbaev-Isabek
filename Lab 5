@@ -1,0 +1,33 @@
+Server [localhost]:
+Database [postgres]:
+Port [5432]:
+Username [postgres]:
+Password for user postgres:
+
+psql (18.6)
+WARNING: Console code page (866) differs from Windows code page (1251)
+         8-bit characters might not work correctly. See psql reference
+         page "Notes for Windows users" for details.
+Type "help" for help.
+
+postgres=# CREATE DATABASE univer;
+CREATE DATABASE
+postgres=#
+postgres=# CREATE DATABASE class;
+CREATE DATABASE
+postgres=# \c univer;
+You are now connected to database "univer" as user "postgres".
+univer=# DROP DATABASE univer;
+ОШИБКА:  удалить базу данных, открытую в данный момент, нельзя
+univer=# \c class;
+You are now connected to database "class" as user "postgres".
+class=# DROP DATABASE univer;
+DROP DATABASE
+class=# \c univer;
+connection to server at "localhost" (::1), port 5432 failed: ВАЖНО:  база данных "univer" не существует
+Previous connection kept
+class=# \c postgres
+You are now connected to database "postgres" as user "postgres".
+postgres=# DROP DATABASE class;
+DROP DATABASE
+postgres=#
