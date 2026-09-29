@@ -1,0 +1,103 @@
+Server [localhost]:
+Database [postgres]:
+Port [5432]:
+Username [postgres]:
+Password for user postgres:
+
+psql (18.6)
+WARNING: Console code page (866) differs from Windows code page (1251)
+         8-bit characters might not work correctly. See psql reference
+         page "Notes for Windows users" for details.
+Type "help" for help.
+
+postgres=# DROP TABLE non_existing_table;
+ОШИБКА:  таблица "non_existing_table" не существует
+postgres=# DROP TABLE IF EXISTS non_existing_table;
+ЗАМЕЧАНИЕ:  таблица "non_existing_table" не существует, пропускается
+DROP TABLE
+postgres=# SELECT * FROM uni;
+ id | name  | age |     email     | faculty
+----+-------+-----+---------------+---------
+  1 | Malik |  19 | Malik@auca.kg | AMI
+  2 | Adil  |  19 | Adil@auca.kg  | AMI
+  3 | Alice |  21 | alice@auca.kg | BA
+  4 | Bob   |  23 | bob@auca.kg   | SWI
+(4 rows)
+
+
+postgres=# ALTER TABLE uni ADD COLUMN gender VARCHAR(100);
+ALTER TABLE
+postgres=# SELECT * FROM uni;
+ id | name  | age |     email     | faculty | gender
+----+-------+-----+---------------+---------+--------
+  1 | Malik |  19 | Malik@auca.kg | AMI     |
+  2 | Adil  |  19 | Adil@auca.kg  | AMI     |
+  3 | Alice |  21 | alice@auca.kg | BA      |
+  4 | Bob   |  23 | bob@auca.kg   | SWI     |
+(4 rows)
+
+
+postgres=# ALTER TABLE uni DROP COLUMN gender;
+ALTER TABLE
+postgres=# SELECT * FROM uni;
+ id | name  | age |     email     | faculty
+----+-------+-----+---------------+---------
+  1 | Malik |  19 | Malik@auca.kg | AMI
+  2 | Adil  |  19 | Adil@auca.kg  | AMI
+  3 | Alice |  21 | alice@auca.kg | BA
+  4 | Bob   |  23 | bob@auca.kg   | SWI
+(4 rows)
+
+
+postgres=# ALTER TABLE uni ADD COLUMN gender VARCHAR(100);
+ALTER TABLE
+                                            ^
+postgres=# ALTER TABLE uni ALTER COLUMN gender TYPE TEXT;
+ALTER TABLE
+                                                   ^
+postgres=# ALTER TABLE uni ADD CONSTRAINT email UNIQUE (email);
+ALTER TABLE
+                                                                   ^
+postgres=# INSERT INTO uni (name, age, email, faculty) VALUES ('Alice', 21, 'alice@auca.kg', 'BA');
+ОШИБКА:  повторяющееся значение ключа нарушает ограничение уникальности "email"
+DETAIL:  Ключ "(email)=(alice@auca.kg)" уже существует.
+postgres=# INSERT INTO uni (name, age, email, faculty) VALUES ('Alice', 21, 'alice2@auca.kg', 'BA');
+INSERT 0 1
+postgres=# SELECT * FROM uni;
+ id | name  | age |     email      | faculty | gender
+----+-------+-----+----------------+---------+--------
+  1 | Malik |  19 | Malik@auca.kg  | AMI     |
+  2 | Adil  |  19 | Adil@auca.kg   | AMI     |
+  3 | Alice |  21 | alice@auca.kg  | BA      |
+  4 | Bob   |  23 | bob@auca.kg    | SWI     |
+  6 | Alice |  21 | alice2@auca.kg | BA      |
+(5 rows)
+
+
+postgres=# ALTER TABLE uni RENAME COLUMN email TO email_address;
+ALTER TABLE
+postgres=# SELECT * FROM uni;
+ id | name  | age | email_address  | faculty | gender
+----+-------+-----+----------------+---------+--------
+  1 | Malik |  19 | Malik@auca.kg  | AMI     |
+  2 | Adil  |  19 | Adil@auca.kg   | AMI     |
+  3 | Alice |  21 | alice@auca.kg  | BA      |
+  4 | Bob   |  23 | bob@auca.kg    | SWI     |
+  6 | Alice |  21 | alice2@auca.kg | BA      |
+(5 rows)
+
+
+postgres=# ALTER TABLE uni RENAME TO auca;
+ALTER TABLE
+postgres=# SELECT * FROM auca;
+ id | name  | age | email_address  | faculty | gender
+----+-------+-----+----------------+---------+--------
+  1 | Malik |  19 | Malik@auca.kg  | AMI     |
+  2 | Adil  |  19 | Adil@auca.kg   | AMI     |
+  3 | Alice |  21 | alice@auca.kg  | BA      |
+  4 | Bob   |  23 | bob@auca.kg    | SWI     |
+  6 | Alice |  21 | alice2@auca.kg | BA      |
+(5 rows)
+
+
+postgres=#
