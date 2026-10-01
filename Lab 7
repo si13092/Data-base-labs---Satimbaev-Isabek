@@ -1,0 +1,95 @@
+Server [localhost]:
+Database [postgres]:
+Port [5432]:
+Username [postgres]:
+Password for user postgres:
+
+psql (18.6)
+WARNING: Console code page (866) differs from Windows code page (1251)
+         8-bit characters might not work correctly. See psql reference
+         page "Notes for Windows users" for details.
+Type "help" for help.
+
+postgres=# CREATE TABLE boys( student_id INTEGER PRIMARY KEY, name VARCHAR(100), email VARCHAR(150));
+CREATE TABLE
+
+postgres=# CREATE TABLE boys( boys_id INTEGER, name VARCHAR(100), email VARCHAR(150), PRIMARY KEY(boys_id));
+CREATE TABLE
+
+postgres=# CREATE TABLE boys( boys_id INTEGER, name VARCHAR(100), email VARCHAR(150), CONSTRAINT pk_boys PRIMARY KEY (boys_id));
+CREATE TABLE
+postgres=# select * from boys;
+ boys_id | name | email
+---------+------+-------
+(0 rows)
+
+
+postgres=# CREATE TABLE boys( boys_id INTEGER, name VARCHAR(100), email VARCHAR(150), CONSTRAINT pk_boys PRIMARY KEY (boys_id));
+CREATE TABLE
+
+postgres=# CREATE TABLE boys( boys_id INTEGER, name VARCHAR(100), email VARCHAR(150));
+CREATE TABLE
+
+postgres=# ALTER TABLE boys ADD CONSTRAINT pk_boys PRIMARY KEY (boys_id);
+ALTER TABLE
+postgres=# select * from boys;
+ boys_id | name | email
+---------+------+-------
+(0 rows)
+
+
+postgres=# CREATE TABLE boys(boys_name  VARCHAR(100), boys_sname VARCHAR(100),boys_bd VARCHAR(100), PRIMARY KEY (boys_name, boys_sname, boys_bd));
+CREATE TABLE
+
+postgres=# INSERT INTO boys(boys_name, boys_sname, boys_bd)
+postgres-# VALUES
+postgres-# ('Isa', 'Satimbaev', '17.07.2006'),
+postgres-# ('Malik', 'Satimbaev', '17.07.2006'),
+postgres-# ('Isa', 'Satimbaev', '18.07.2006'),
+postgres-# ('Malik', 'Tursunov', '17.07.2006');
+INSERT 0 4
+postgres=# SELECT * FROM boys;
+ boys_name | boys_sname |  boys_bd
+-----------+------------+------------
+ Isa       | Satimbaev  | 17.07.2006
+ Malik     | Satimbaev  | 17.07.2006
+ Isa       | Satimbaev  | 18.07.2006
+ Malik     | Tursunov   | 17.07.2006
+(4 rows)
+
+
+postgres=# INSERT INTO boys(boys_name, boys_sname, boys_bd)
+postgres-# VALUES
+postgres-# ('Isa', 'Satimbaev', '17.07.2006');
+ОШИБКА:  повторяющееся значение ключа нарушает ограничение уникальности "boys_pkey"
+DETAIL:  Ключ "(boys_name, boys_sname, boys_bd)=(Isa, Satimbaev, 17.07.2006)" уже существует.
+
+
+postgres=# INSERT INTO boys(boys_name, boys_sname, boys_bd)
+postgres-# VALUES
+postgres-# (NULL, 'Satimbaev', '17.07.2006');
+ОШИБКА:  значение NULL в столбце "boys_name" отношения "boys" нарушает ограничение NOT NULL
+DETAIL:  Ошибочная строка содержит (null, Satimbaev, 17.07.2006).
+
+
+postgres=# \d boys;
+                         Table "public.boys"
+   Column   |          Type          | Collation | Nullable | Default
+------------+------------------------+-----------+----------+---------
+ boys_name  | character varying(100) |           | not null |
+ boys_sname | character varying(100) |           | not null |
+ boys_bd    | character varying(100) |           | not null |
+Indexes:
+    "boys_pkey" PRIMARY KEY, btree (boys_name, boys_sname, boys_bd)
+
+
+postgres=# \d STUDENTS;
+                                    Table "public.students"
+ Column |          Type          | Collation | Nullable |               Default
+--------+------------------------+-----------+----------+--------------------------------------
+ id     | integer                |           | not null | nextval('students_id_seq'::regclass)
+ name   | character varying(100) |           |          |
+ age    | integer                |           |          |
+Indexes:
+    "students_pkey" PRIMARY KEY, btree (id)
+
