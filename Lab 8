@@ -1,0 +1,296 @@
+postgres=# CREATE TABLE depart(
+postgres(# depr_id SERIAL PRIMARY KEY,
+postgres(# dept_name VARCHAR(100) NOT NULL,
+postgres(# location VARCHAR(100));
+CREATE TABLE
+postgres=# CREATE TABLE emp(
+postgres(# emp_id SERIAL PRIMARY KEY,
+postgres(# first_name VARCHAR(100) NOT NULL,
+postgres(# last_name VARCHAR(100) NOT NULL,
+postgres(# dept_id INTEGER REFERENCES depart(depr_id));
+CREATE TABLE
+postgres=# INSERT INTO depart (dept_name, location) VALUES
+postgres-# ('MATH', 'ROOM 1'),
+postgres-# ('LAW', 'ROOM 2'),
+postgres-# ('ART', 'ROOM 3');
+INSERT 0 3
+postgres=# INSERT INTO emp (first_name, last_name, dept_id) VALUES
+postgres-# ('ISA', 'SATIMBAEV', 1);
+INSERT 0 1
+postgres=# INSERT INTO emp (first_name, last_name, dept_id) VALUES
+postgres-# ('ISA', 'SATIMBAEV', 99);
+ОШИБКА:  INSERT или UPDATE в таблице "emp" нарушает ограничение внешнего ключа "emp_dept_id_fkey"
+DETAIL:  Ключ (dept_id)=(99) отсутствует в таблице "depart".
+postgres=# DELETE FROM depart WHERE depr_id = 1;
+ОШИБКА:  UPDATE или DELETE в таблице "depart" нарушает ограничение внешнего ключа "emp_dept_id_fkey" таблицы "emp"
+DETAIL:  На ключ (depr_id)=(1) всё ещё есть ссылки в таблице "emp".
+postgres=# DROP TABLE EMP;
+DROP TABLE
+postgres=# CREATE TABLE emp(
+postgres(# emp_id SERIAL PRIMARY KEY,
+postgres(# first_name VARCHAR(100) NOT NULL,
+postgres(# last_name VARCHAR(100) NOT NULL,
+postgres(# dept_id INTEGER REFERENCES depart(depr_id) ON DELETE CASCADE);
+CREATE TABLE
+postgres=# INSERT INTO emp (first_name, last_name, dept_id) VALUES
+postgres-# ('ISA', 'SATIMBAEV', 1);
+INSERT 0 1
+postgres=# SELECT * FROM EMP;
+ emp_id | first_name | last_name | dept_id
+--------+------------+-----------+---------
+      1 | ISA        | SATIMBAEV |       1
+(1 row)
+
+
+postgres=# SELECT * FROM DEPART;
+ depr_id | dept_name | location
+---------+-----------+----------
+       1 | MATH      | ROOM 1
+       2 | LAW       | ROOM 2
+       3 | ART       | ROOM 3
+(3 rows)
+
+
+postgres=# DELETE FROM depart WHERE depr_id = 1;
+DELETE 1
+postgres=# SELECT * FROM EMP;
+ emp_id | first_name | last_name | dept_id
+--------+------------+-----------+---------
+(0 rows)
+
+
+postgres=# SELECT * FROM DEPART;
+ depr_id | dept_name | location
+---------+-----------+----------
+       2 | LAW       | ROOM 2
+       3 | ART       | ROOM 3
+(2 rows)
+
+
+postgres=# INSERT INTO depart (dept_name, location) VALUES
+postgres-# ('MATH', 'ROOM 1'),
+postgres-# ('SFW', 'ROOM 4');
+INSERT 0 2
+postgres=# SELECT * FROM DEPART;
+ depr_id | dept_name | location
+---------+-----------+----------
+       2 | LAW       | ROOM 2
+       3 | ART       | ROOM 3
+       4 | MATH      | ROOM 1
+       5 | SFW       | ROOM 4
+(4 rows)
+
+
+postgres=# DROP TABLE EMP;
+DROP TABLE
+postgres=# CREATE TABLE emp(
+postgres(# emp_id SERIAL PRIMARY KEY,
+postgres(# first_name VARCHAR(100) NOT NULL,
+postgres(# last_name VARCHAR(100) NOT NULL,
+postgres(# dept_id INTEGER REFERENCES depart(depr_id) ON DELETE SET NULL);
+CREATE TABLE
+postgres=# INSERT INTO emp (first_name, last_name, dept_id) VALUES
+postgres-# ('ISA', 'SATIMBAEV', 4);
+INSERT 0 1
+postgres=# DELETE FROM depart WHERE depr_id = 4;
+DELETE 1
+postgres=# SELECT * FROM DEPART;
+ depr_id | dept_name | location
+---------+-----------+----------
+       2 | LAW       | ROOM 2
+       3 | ART       | ROOM 3
+       5 | SFW       | ROOM 4
+(3 rows)
+
+
+postgres=# SELECT * FROM EMP;
+ emp_id | first_name | last_name | dept_id
+--------+------------+-----------+---------
+      1 | ISA        | SATIMBAEV |
+(1 row)
+postgres=# DROP TABLE EMP;
+DROP TABLE
+postgres=# CREATE TABLE emp(
+postgres(# emp_id SERIAL PRIMARY KEY,
+postgres(# first_name VARCHAR(100) NOT NULL,
+postgres(# last_name VARCHAR(100) NOT NULL,
+postgres(# dept_id INTEGER REFERENCES depart(depr_id) ON UPDATE CASCADE);
+CREATE TABLE
+postgres=# INSERT INTO emp (first_name, last_name, dept_id) VALUES
+postgres-# ('ISA', 'SATIMBAEV', 5);
+INSERT 0 1
+postgres=# SELECT * FROM DEPART;
+ depr_id | dept_name | location
+---------+-----------+----------
+       2 | LAW       | ROOM 2
+       3 | ART       | ROOM 3
+       5 | SFW       | ROOM 4
+(3 rows)
+
+
+postgres=# SELECT * FROM EMP;
+ emp_id | first_name | last_name | dept_id
+--------+------------+-----------+---------
+      1 | ISA        | SATIMBAEV |       5
+(1 row)
+
+
+postgres=# UPDATE depart SET depr_id = 100 WHERE depr_id = 5;
+UPDATE 1
+postgres=# SELECT * FROM DEPART;
+ depr_id | dept_name | location
+---------+-----------+----------
+       2 | LAW       | ROOM 2
+       3 | ART       | ROOM 3
+     100 | SFW       | ROOM 4
+(3 rows)
+
+
+postgres=# SELECT * FROM EMP;
+ emp_id | first_name | last_name | dept_id
+--------+------------+-----------+---------
+      1 | ISA        | SATIMBAEV |     100
+(1 row)
+
+
+postgres=# CREATE TABLE users(
+postgres(# user_id SERIAL PRIMARY KEY,
+postgres(# username VARCHAR(100) UNIQUE NOT NULL,
+postgres(# email VARCHAR(100) UNIQUE NOT NULL,
+postgres(# created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE
+postgres=# CREATE TABLE user_profiles (
+postgres(# profile_id SERIAL PRIMARY KEY,
+postgres(# user_id INTEGER UNIQUE NOT NULL,
+postgres(# first_name VARCHAR(100),
+postgres(# last_name VARCHAR(100),
+postgres(# bio TEXT,
+postgres(# profile_picture_url VARCHAR(255),
+postgres(# FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE);
+CREATE TABLE
+postgres=# INSERT INTO users (username, email) VALUES
+postgres-# ('Isabek', 'si13092@auca.kg');
+INSERT 0 1
+postgres=# INSERT INTO user_profiles (user_id, first_name, last_name, bio) VALUES
+postgres-# (1, 'Isa', 'Satimbaev', 'AMI departmen junior student');
+INSERT 0 1
+postgres=# INSERT INTO user_profiles (user_id, first_name, last_name) VALUES
+postgres-# (1, 'Malik', 'Tursunov');
+ОШИБКА:  повторяющееся значение ключа нарушает ограничение уникальности "user_profiles_user_id_key"
+DETAIL:  Ключ "(user_id)=(1)" уже существует.
+postgres=# UPDATE depart SET depr_id = 4 where depr_id = 100;
+UPDATE 1
+postgres=# INSERT INTO depart (dept_name, location) VALUES
+postgres-# ('MATH', 'ROOM 1');
+INSERT 0 1
+postgres=# UPDATE depart SET depr_id = 1 where depr_id = 6;
+UPDATE 1
+postgres=# SELECT * FROM DEPART;
+ depr_id | dept_name | location
+---------+-----------+----------
+       2 | LAW       | ROOM 2
+       3 | ART       | ROOM 3
+       4 | SFW       | ROOM 4
+       1 | MATH      | ROOM 1
+(4 rows)
+
+
+postgres=# SELECT * FROM EMP;
+ emp_id | first_name | last_name | dept_id
+--------+------------+-----------+---------
+      1 | ISA        | SATIMBAEV |       4
+(1 row)
+
+
+postgres=# INSERT INTO emp (first_name, last_name, dept_id) VALUES
+postgres-# ('MALIK', 'TURSUNOV', 4),
+postgres-# ('ADIL', 'AKHMETOV', 1),
+postgres-# ('SAMIR', 'SABIROV', 1);
+INSERT 0 3
+postgres=# SELECT * FROM EMP;
+ emp_id | first_name | last_name | dept_id
+--------+------------+-----------+---------
+      1 | ISA        | SATIMBAEV |       4
+      2 | MALIK      | TURSUNOV  |       4
+      3 | ADIL       | AKHMETOV  |       1
+      4 | SAMIR      | SABIROV   |       1
+(4 rows)
+postgres=# CREATE TABLE students(
+postgres(# student_id SERIAL PRIMARY KEY,
+postgres(# first_name VARCHAR(100) NOT NULL,
+postgres(# last_name VARCHAR(100) NOT NULL,
+postgres(# email VARCHAR(100) UNIQUE,
+postgres(# enrollment_date DATE DEFAULT CURRENT_DATE);
+ОШИБКА:  отношение "students" уже существует
+postgres=# DROP TABLE STUDENTS;
+DROP TABLE
+postgres=# CREATE TABLE students(
+postgres(# student_id SERIAL PRIMARY KEY,
+postgres(# first_name VARCHAR(100) NOT NULL,
+postgres(# last_name VARCHAR(100) NOT NULL,
+postgres(# email VARCHAR(100) UNIQUE,
+postgres(# enrollment_date DATE DEFAULT CURRENT_DATE);
+CREATE TABLE
+postgres=# CREATE TABLE courses(
+postgres(# course_id SERIAL PRIMARY KEY,
+postgres(# course_name VARCHAR(100) NOT NULL,
+postgres(# course_code VARCHAR(100) UNIQUE NOT NULL,
+postgres(# credits INTEGER NOT NULL,
+postgres(# instructor VARCHAR(100));
+CREATE TABLE
+postgres=# CREATE TABLE st_enroll(
+postgres(# enroll_id SERIAL PRIMARY KEY,
+postgres(# student_id INTEGER NOT NULL,
+postgres(# course_id INTEGER NOT NULL,
+postgres(# enroll_date DATE DEFAULT CURRENT_DATE,
+postgres(# grade CHAR(2),
+postgres(# FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE,
+postgres(# FOREIGN KEY (course_id) REFERENCES courses(course_id) ON DELETE CASCADE,
+postgres(# UNIQUE (student_id, course_id));
+CREATE TABLE
+postgres=# INSERT INTO students (first_name, last_name, email) VALUES
+postgres-# ('Isabek', 'Satimbaev', 'si13092@auca.kg'),
+postgres-# ('Malik', 'Tursunov', 'ta13087@auca.kg'),
+postgres-# ('Samir', 'Sabirov', 'ss13054@auca.kg'),
+postgres-# ('Adil', 'Akhmetov', 'aa13077@auca.kg');
+INSERT 0 4
+postgres=# INSERT INTO courses (course_code, course_name, credits, instructor) VALUES
+postgres-# ('MATH201', 'MATANALITH', 6, 'Elena Burova'),
+postgres-# ('SFW102', 'INTRO TO PROGRAMMING', 6, 'Anatoliy Sergeev'),
+postgres-# ('ART304', 'DIGITAL CULTURE', 6, 'Lubov Popova');
+INSERT 0 3
+postgres=# INSERT INTO st_enroll (student_id, course_id, grade) VALUES
+postgres-# (5, 1, 'A+'),
+postgres-# (5, 3, 'B-'),
+postgres-# (6, 1, 'A+'),
+postgres-# (6, 2, 'C'),
+postgres-# (7, 1, 'A-'),
+postgres-# (7, 2, 'A-'),
+postgres-# (8, 1, 'A'),
+postgres-# (8, 3, 'C');
+INSERT 0 8
+postgres=# SELECT
+postgres-# s.first_name || ' ' || s.last_name AS student_name,
+postgres-# c.course_code,
+postgres-# c.course_name,
+postgres-# se.grade,
+postgres-# se.enroll_date
+postgres-# FROM students s
+postgres-# JOIN st_enroll se ON s.student_id = se.student_id
+postgres-# JOIN courses c ON se.course_id = c.course_id
+postgres-#
+postgres-# ORDER BY s.last_name, c.course_code;
+   student_name   | course_code |     course_name      | grade | enroll_date
+------------------+-------------+----------------------+-------+-------------
+ Adil Akhmetov    | ART304      | DIGITAL CULTURE      | C     | 2026-10-12
+ Adil Akhmetov    | MATH201     | MATANALITH           | A     | 2026-10-12
+ Samir Sabirov    | MATH201     | MATANALITH           | A-    | 2026-10-12
+ Samir Sabirov    | SFW102      | INTRO TO PROGRAMMING | A-    | 2026-10-12
+ Isabek Satimbaev | ART304      | DIGITAL CULTURE      | B-    | 2026-10-12
+ Isabek Satimbaev | MATH201     | MATANALITH           | A+    | 2026-10-12
+ Malik Tursunov   | MATH201     | MATANALITH           | A+    | 2026-10-12
+ Malik Tursunov   | SFW102      | INTRO TO PROGRAMMING | C     | 2026-10-12
+(8 rows)
+
+
+postgres=#
