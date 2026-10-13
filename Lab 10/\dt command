@@ -1,0 +1,18 @@
+postgres=# \dt
+              List of tables
+ Schema |     Name      | Type  |  Owner
+--------+---------------+-------+----------
+ public | auca          | table | postgres
+ public | boys          | table | postgres
+ public | courses       | table | postgres
+ public | depart        | table | postgres
+ public | emp           | table | postgres
+ public | game_chars    | table | postgres
+ public | game_devs     | table | postgres
+ public | game_studios  | table | postgres
+ public | games         | table | postgres
+ public | st_enroll     | table | postgres
+ public | students      | table | postgres
+ public | user_profiles | table | postgres
+ public | users         | table | postgres
+(13 rows)
