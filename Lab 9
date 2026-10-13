@@ -1,0 +1,35 @@
+Conceptual Design
+Entities: game studios, game developers, games, game characters
+Relationships:
+- game studios have their game developers
+- game developers make games
+- games contain game characters
+
+
+CREATE TABLE game_studios(
+	game_studio_id SERIAL PRIMARY KEY
+);
+CREATE TABLE games(
+	game_id SERIAL PRIMARY KEY,
+	game_studio_id INTEGER, 
+	game_name VARCHAR(100),
+	game_studio VARCHAR(100),
+	game_date VARCHAR(100),
+	FOREIGN KEY (game_studio_id) REFERENCES game_studios(game_studio_id)
+);
+
+CREATE TABLE game_chars(
+	game_id INTEGER,
+	game_char_id INTEGER NOT NULL,
+	char_name VARCHAR(100),
+	PRIMARY KEY (game_id, game_char_id),
+	FOREIGN KEY (game_id) REFERENCES games(game_id)
+);
+CREATE TABLE game_devs(
+	game_studio_id INTEGER,
+	game_dev_id SERIAL PRIMARY KEY,
+	first_name VARCHAR(100),
+	last_name VARCHAR(100),
+	birth_date DATE,
+	FOREIGN KEY (game_studio_id) REFERENCES game_studios(game_studio_id)
+);
