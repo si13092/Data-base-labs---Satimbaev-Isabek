@@ -1,0 +1,60 @@
+CREATE TABLE boys (
+    boy_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+	clichka VARCHAR(50),
+    birth_date DATE
+);
+
+INSERT INTO boys (first_name, last_name, clichka, birth_date) VALUES 
+('Isabek', 'Satimbaev', 'Isa',  '2006-07-17'),
+('Malik', 'Tursunov', 'Mamik',  '2007-01-12'),
+('Adil', 'Akhmetov', 'Adilo',  '2006-11-24'),
+('Samir', 'Sabirov', 'Pamir',  '2006-09-19')
+;
+INSERT 0 4
+select * from boys;
+boy_id | first_name | last_name | clichka | birth_date
+--------+------------+-----------+---------+------------
+      1 | Isabek     | Satimbaev | Isa     | 2006-07-17
+      2 | Malik      | Tursunov  | Mamik   | 2007-01-12
+      3 | Adil       | Akhmetov  | Adilo   | 2006-11-24
+      4 | Samir      | Sabirov   | Pamir   | 2006-09-19
+(4 rows)
+UPDATE boys
+SET birth_date = '2006-06-26'
+WHERE first_name = 'Isabek' AND clichka = 'Isa';
+postgres=# select * from boys;
+ boy_id | first_name | last_name | clichka | birth_date
+--------+------------+-----------+---------+------------
+      2 | Malik      | Tursunov  | Mamik   | 2007-01-12
+      3 | Adil       | Akhmetov  | Adilo   | 2006-11-24
+      4 | Samir      | Sabirov   | Pamir   | 2006-09-19
+      1 | Isabek     | Satimbaev | Isa     | 2006-06-26
+(4 rows)
+DELETE FROM boys
+WHERE first_name = 'Samir' AND last_name = 'Sabirov';
+postgres=# select * from boys;
+ boy_id | first_name | last_name | clichka | birth_date
+--------+------------+-----------+---------+------------
+      2 | Malik      | Tursunov  | Mamik   | 2007-01-12
+      3 | Adil       | Akhmetov  | Adilo   | 2006-11-24
+      1 | Isabek     | Satimbaev | Isa     | 2006-06-26
+(3 rows)
+DELETE FROM boys
+WHERE birth_date < '20010-01-01';
+postgres=# select * from boys;
+ boy_id | first_name | last_name | clichka | birth_date
+--------+------------+-----------+---------+------------
+(0 rows)
+UPDATE boys
+SET first_name = 'Isa'
+WHERE first_name IN ('Malik', 'Adil', 'Samir');
+postgres=# select * from boys;
+ boy_id | first_name | last_name | clichka | birth_date
+--------+------------+-----------+---------+------------
+      5 | Isabek     | Satimbaev | Isa     | 2006-07-17
+      6 | Isa        | Tursunov  | Mamik   | 2007-01-12
+      7 | Isa        | Akhmetov  | Adilo   | 2006-11-24
+      8 | Isa        | Sabirov   | Pamir   | 2006-09-19
+(4 rows)
