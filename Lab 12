@@ -1,0 +1,94 @@
+postgres=# select*from boys;
+ boy_id | first_name | last_name | clichka | birth_date
+--------+------------+-----------+---------+------------
+      9 | Isabek     | Satimbaev | Isa     | 2006-07-17
+     10 | Malik      | Tursunov  | Mamik   | 2007-01-12
+     11 | Adil       | Akhmetov  | Adilo   | 2006-11-24
+     12 | Samir      | Sabirov   | Pamir   | 2006-09-19
+(4 rows)
+postgres=# SELECT first_name From boys;
+ first_name
+------------
+ Isabek
+ Malik
+ Adil
+ Samir
+(4 rows)
+postgres=# select first_name, last_name from boys where birth_date < '2007-01-01';
+ first_name | last_name
+------------+-----------
+ Isabek     | Satimbaev
+ Adil       | Akhmetov
+ Samir      | Sabirov
+(3 rows)
+postgres=# select clichka from boys where birth_date between '2006-09-01' and '2007-01-01';
+ clichka
+---------
+ Adilo
+ Pamir
+(2 rows)
+INSERT INTO boys (first_name, last_name, clichka, birth_date) VALUES 
+('Aktan', 'Asankulov', 'Aktich',  '2005-12-21'),
+('Hurmuhammed', 'Aidarov', 'Nurma',  '2006-05-11'),
+('Aliakbar', 'Kasymkulov', 'Ali',  '2006-10-02'),
+('Aktan', 'Akimov', 'Akich',  '2007-02-18')
+;
+postgres=# select*from boys;
+ boy_id | first_name  | last_name  | clichka | birth_date
+--------+-------------+------------+---------+------------
+      9 | Isabek      | Satimbaev  | Isa     | 2006-07-17
+     10 | Malik       | Tursunov   | Mamik   | 2007-01-12
+     11 | Adil        | Akhmetov   | Adilo   | 2006-11-24
+     12 | Samir       | Sabirov    | Pamir   | 2006-09-19
+     13 | Aktan       | Asankulov  | Aktich  | 2005-12-21
+     14 | Hurmuhammed | Aidarov    | Nurma   | 2006-05-11
+     15 | Aliakbar    | Kasymkulov | Ali     | 2006-10-02
+     16 | Aktan       | Akimov     | Akich   | 2007-02-18
+(8 rows)
+postgres=# SELECT first_name FROM boys WHERE last_name LIKE 'Ak%';
+ first_name
+------------
+ Adil
+ Aktan
+(2 rows)
+postgres=# SELECT first_name FROM boys WHERE last_name LIKE 'AK%';
+ first_name
+------------
+(0 rows)
+postgres=# SELECT first_name FROM boys WHERE last_name ILIKE 'AK%';
+ first_name
+------------
+ Adil
+ Aktan
+(2 rows)
+postgres=# SELECT first_name FROM boys WHERE last_name LIKE '%lov';
+ first_name
+------------
+ Aktan
+ Aliakbar
+(2 rows)
+postgres=# SELECT first_name FROM boys WHERE last_name ~ '^[SK]';
+ first_name
+------------
+ Isabek
+ Samir
+ Aliakbar
+(3 rows)
+postgres=# SELECT first_name, last_name,
+postgres-# CASE
+postgres-# WHEN birth_date < '2006-01-01' THEN 'Old'
+postgres-# WHEN birth_date BETWEEN '2006-01-01' AND '2007-01-01' THEN 'Mid-age'
+postgres-# ELSE 'Young'
+postgres-# END AS age_type
+postgres-# FROM boys;
+ first_name  | last_name  | age_type
+-------------+------------+----------
+ Isabek      | Satimbaev  | Mid-age
+ Malik       | Tursunov   | Young
+ Adil        | Akhmetov   | Mid-age
+ Samir       | Sabirov    | Mid-age
+ Aktan       | Asankulov  | Old
+ Hurmuhammed | Aidarov    | Mid-age
+ Aliakbar    | Kasymkulov | Mid-age
+ Aktan       | Akimov     | Young
+(8 rows)
