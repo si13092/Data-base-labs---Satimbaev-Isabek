@@ -1,0 +1,70 @@
+postgres=# SELECT first_name, money
+postgres-# FROM boys;
+ first_name  | money
+-------------+-------
+ Isabek      |   100
+ Malik       |   500
+ Adil        |   250
+ Samir       |   150
+ Aktan       |   200
+ Nurmuhammed |   350
+ Aliakbar    |   450
+ Aktan       |   350
+ Atai        |   400
+ Ramazan     |   500
+(10 rows)
+
+BEGIN;
+UPDATE boys SET money = money - 100 WHERE first_name = 'Isabek';
+UPDATE boys SET money = money + 100 WHERE first_name = 'Malik';
+COMMIT;
+postgres=# select first_name, money from boys;
+ first_name  | money
+-------------+-------
+ Adil        |   250
+ Samir       |   150
+ Aktan       |   200
+ Nurmuhammed |   350
+ Aliakbar    |   450
+ Aktan       |   350
+ Atai        |   400
+ Ramazan     |   500
+ Isabek      |     0
+ Malik       |   600
+(10 rows)
+
+BEGIN;
+INSERT INTO boys (first_name, money) VALUES ('Isa', 2.5);
+COMMIT;
+ERROR:  текущая транзакция прервана, команды до конца блока транзакции игнорируются 
+
+ОШИБКА:  текущая транзакция прервана, команды до конца блока транзакции игнорируются
+SQL state: 25P02
+
+ROLLBACK;
+
+BEGIN;
+
+INSERT INTO boys (first_name, money) VALUES ('Jamily', 999);
+SAVEPOINT sp1;
+
+INSERT INTO boys (first_name, money) VALUES ('Kanat', 699.99);
+ROLLBACK TO SAVEPOINT sp1;
+
+COMMIT;
+
+postgres=# select first_name, money from boys;
+ first_name  | money
+-------------+-------
+ Adil        |   250
+ Samir       |   150
+ Aktan       |   200
+ Nurmuhammed |   350
+ Aliakbar    |   450
+ Aktan       |   350
+ Atai        |   400
+ Ramazan     |   500
+ Isabek      |   100
+ Malik       |   500
+ Jamily      |   999
+(13 rows)
