@@ -1,0 +1,184 @@
+postgres=# SELECT COUNT(*) AS total_boys
+postgres-# FROM boys;
+ total_boys
+------------
+         10
+(1 row)
+postgres=# SELECT COUNT(DISTINCT first_name) AS unique_first_name
+postgres-# FROM boys;
+ unique_first_name
+-------------------
+                 9
+(1 row)
+
+postgres=# SELECT SUM(weight) AS total_weight
+postgres-# FROM boys;
+ total_weight
+--------------
+          708
+(1 row)
+postgres=# SELECT depart, SUM(weight) AS total_weight
+postgres-# FROM boys
+postgres-# GROUP BY depart;
+ depart | total_weight
+--------+--------------
+ ART    |           63
+ SFW    |          209
+ BA     |          228
+ PHIL   |           69
+ AMI    |          139
+(5 rows)
+postgres=# SELECT AVG(weight) AS average_weight
+postgres-# FROM boys;
+   average_weight
+---------------------
+ 70.8000000000000000
+(1 row)
+postgres=# SELECT depart, AVG(weight) AS average_weight
+postgres-# FROM boys
+postgres-# GROUP BY depart;
+ depart |   average_weight
+--------+---------------------
+ ART    | 63.0000000000000000
+ SFW    | 69.6666666666666667
+ BA     | 76.0000000000000000
+ PHIL   | 69.0000000000000000
+ AMI    | 69.5000000000000000
+(5 rows)
+postgres=# SELECT
+postgres-#     MAX(birth_date) AS youngest,
+postgres-#     MIN(birth_date) AS oldest
+postgres-# FROM boys;
+  youngest  |   oldest
+------------+------------
+ 2007-01-12 | 2006-05-11
+(1 row)
+postgres=# SELECT depart, MAX(weight) AS biggest
+postgres-# FROM boys
+postgres-# GROUP BY depart;
+ depart | biggest
+--------+---------
+ ART    |      63
+ SFW    |      72
+ BA     |      78
+ PHIL   |      69
+ AMI    |      71
+(5 rows)
+postgres=# SELECT depart, STRING_AGG(first_name, ', ') AS boys_names
+postgres-# FROM boys
+postgres-# GROUP BY depart;
+ depart |       boys_names
+--------+-----------------------
+ ART    | Aktan
+ SFW    | Malik, Aliakbar, Atai
+ BA     | Adil, Aktan, Ramazan
+ PHIL   | Hurmuhammed
+ AMI    | Isabek, Samir
+(5 rows)
+postgres=# SELECT depart, STRING_AGG(first_name, ', ' ORDER BY first_name ) AS boys_names
+postgres-# FROM boys
+postgres-# GROUP BY depart;
+ depart |      boys_names
+--------+-----------------------
+ AMI    | Isabek, Samir
+ ART    | Aktan
+ BA     | Adil, Aktan, Ramazan
+ PHIL   | Hurmuhammed
+ SFW    | Aliakbar, Atai, Malik
+(5 rows)
+postgres=# SELECT depart, ARRAY_AGG(weight) AS weight_array
+postgres-# FROM boys
+postgres-# GROUP BY depart;
+ depart | weight_array
+--------+--------------
+ ART    | {63}
+ SFW    | {70,72,67}
+ BA     | {73,78,77}
+ PHIL   | {69}
+ AMI    | {68,71}
+(5 rows)
+postgres=# SELECT
+postgres-#     depart,
+postgres-#     STDDEV(weight) AS weight_std_dev,
+postgres-#     VARIANCE(weight) AS weight_variance
+postgres-# FROM boys
+postgres-# GROUP BY depart;
+ depart |   weight_std_dev   |  weight_variance
+--------+--------------------+--------------------
+ ART    |                    |
+ SFW    | 2.5166114784235832 | 6.3333333333333333
+ BA     | 2.6457513110645906 | 7.0000000000000000
+ PHIL   |                    |
+ AMI    | 2.1213203435596426 | 4.5000000000000000
+(5 rows)
+postgres=# SELECT
+postgres-#     depart,
+postgres-#     COUNT(*) AS number_of_boys,
+postgres-#     SUM(weight) AS total_weight,
+postgres-#     min(birth_date) AS oldest_of_depart
+postgres-# FROM boys
+postgres-# GROUP BY depart;
+ depart | number_of_boys | total_weight | oldest_of_depart
+--------+----------------+--------------+------------------
+ ART    |              1 |           63 |
+ SFW    |              3 |          209 | 2006-10-02
+ BA     |              3 |          228 | 2006-11-24
+ PHIL   |              1 |           69 | 2006-05-11
+ AMI    |              2 |          139 | 2006-07-17
+(5 rows)
+
+postgres=# SELECT
+postgres-#     depart,
+postgres-#     COUNT(*) AS boys_count
+postgres-# FROM boys
+postgres-# GROUP BY depart;
+ depart | boys_count
+--------+------------
+ ART    |          1
+ SFW    |          3
+ BA     |          3
+ PHIL   |          1
+ AMI    |          2
+(5 rows)
+
+
+
+postgres=# SELECT
+postgres-#     depart,
+postgres-#     COUNT(*) AS boys_count
+postgres-# FROM boys
+postgres-# GROUP BY depart
+postgres-# HAVING COUNT(*) > 1;
+ depart | boys_count
+--------+------------
+ SFW    |          3
+ BA     |          3
+ AMI    |          2
+(3 rows)
+
+postgres=# SELECT
+postgres-#     boy_id,
+postgres-#     first_name,
+postgres-#      last_name,
+postgres-#      clichka,
+postgres-#      birth_date,
+postgres-#     depart,
+postgres-#     weight,
+postgres-#     AVG(weight) OVER (PARTITION BY depart) AS dept_avg_weight
+postgres-# FROM boys;
+ boy_id | first_name  |  last_name  | clichka | birth_date | depart | weight |   dept_avg_weight
+--------+-------------+-------------+---------+------------+--------+--------+---------------------
+     12 | Samir       | Sabirov     | Pamir   | 2006-09-19 | AMI    |     71 | 69.5000000000000000
+      9 | Isabek      | Satimbaev   | Isa     | 2006-07-17 | AMI    |     68 | 69.5000000000000000
+     13 | Aktan       | Asankulov   | Aktich  |            | ART    |     63 | 63.0000000000000000
+      7 | Ramazan     | Jalalidinow | Roma    |            | BA     |     77 | 76.0000000000000000
+     11 | Adil        | Akhmetov    | Adilo   | 2006-11-24 | BA     |     73 | 76.0000000000000000
+     16 | Aktan       | Akimov      | Akich   |            | BA     |     78 | 76.0000000000000000
+     14 | Hurmuhammed | Aidarov     | Nurma   | 2006-05-11 | PHIL   |     69 | 69.0000000000000000
+     15 | Aliakbar    | Kasymkulov  | Ali     | 2006-10-02 | SFW    |     72 | 69.6666666666666667
+     10 | Malik       | Tursunov    | Mamik   | 2007-01-12 | SFW    |     70 | 69.6666666666666667
+      8 | Atai        | Bektenov    | Bekov   |            | SFW    |     67 | 69.6666666666666667
+(10 rows)
+
+
+postgres=#
