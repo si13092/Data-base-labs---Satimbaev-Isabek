@@ -1,0 +1,110 @@
+postgres=# select first_name, last_name, weight
+postgres-# from boys
+postgres-# where weight > (
+postgres(# select AVG(weight) from boys
+postgres(# );
+ first_name |  last_name  | weight
+------------+-------------+--------
+ Adil       | Akhmetov    |     73
+ Samir      | Sabirov     |     71
+ Aliakbar   | Kasymkulov  |     72
+ Aktan      | Akimov      |     78
+ Ramazan    | Jalalidinow |     77
+(5 rows)
+postgres=# WITH dep_count AS (
+postgres(#     SELECT dep_id,
+postgres(#      count(dep_id) AS total_number
+postgres(#      FROM students
+postgres(#      GROUP BY dep_id
+postgres(# )
+postgres-# SELECT dep_id, total_number
+postgres-# FROM dep_count
+postgres-# WHERE total_number >= 4;
+ dep_id | total_number
+--------+--------------
+      3 |            4
+      5 |            6
+      4 |            4
+      1 |            5
+(4 rows)
+
+postgres=# WITH dep_count AS (
+postgres(#     SELECT dep_id,
+postgres(#      count(dep_id) AS total_number
+postgres(#      FROM students
+postgres(#      GROUP BY dep_id
+postgres(# )
+postgres-# SELECT d.name, dc.total_number
+postgres-# FROM dep_count dc
+postgres-# JOIN depart d ON d.dep_id = dc.dep_id;
+ name | total_number
+------+--------------
+ AMI  |            5
+ SFW  |            3
+ LAW  |            4
+ ART  |            4
+ BA   |            6
+ CIN  |            3
+(6 rows)
+postgres=# select name from depart
+postgres-# union all
+postgres-# select student_name from students;
+  name
+---------
+ AMI
+ SFW
+ LAW
+ ART
+ BA
+ ANT
+ CIN
+ Isabek
+ Malic
+ Samir
+ Adil
+ Aigerim
+ Aizada
+ Bekzat
+ Nikita
+ Aziz
+ Sasha
+ Nurgazy
+ Meerim
+ Tilek
+ Aliya
+ Emir
+ Zhyldyz
+ Ermek
+ Kanykei
+ Daniyar
+ Cholpon
+ Azamat
+ Begimai
+ Ruslan
+ Nurlan
+ Dima
+(32 rows)
+postgres=# select first_name from boys
+postgres-# intersect
+postgres-# select student_name from students;
+ first_name
+------------
+ Adil
+ Samir
+ Isabek
+(3 rows)
+postgres=# select first_name, depart, weight , RANK() over(partition by weight) as total_weight
+postgres-# from boys;
+ first_name  | depart | weight | total_weight
+-------------+--------+--------+--------------
+ Aktan       | ART    |     63 |            1
+ Atai        | SFW    |     67 |            1
+ Isabek      | AMI    |     68 |            1
+ Hurmuhammed | PHIL   |     69 |            1
+ Malik       | SFW    |     70 |            1
+ Samir       | AMI    |     71 |            1
+ Aliakbar    | SFW    |     72 |            1
+ Adil        | BA     |     73 |            1
+ Ramazan     | BA     |     77 |            1
+ Aktan       | BA     |     78 |            1
+(10 rows)
