@@ -1,0 +1,14 @@
+boy_id;first_name;last_name;clichka;birth_date;weight;depart;money
+11;Adil;Akhmetov;Adilo;2006-11-24;73;BA;250
+12;Samir;Sabirov;Pamir;2006-09-19;71;AMI;150
+13;Aktan;Asankulov;Aktich;;63;ART;200
+14;Nurmuhammed;Aidarov;Nurma;2006-05-11;69;PHIL;350
+15;Aliakbar;Kasymkulov;Ali;2006-10-02;72;SFW;450
+16;Aktan;Akimov;Akich;;78;BA;350
+8;Atai;Bektenov;Bekov;;67;SFW;400
+7;Ramazan;Jalalidinow;Roma;;77;BA;500
+9;Isabek;Satimbaev;Isa;2006-07-17;68;AMI;100
+10;Malik;Tursunov;Mamik;2007-01-12;70;SFW;500
+17;1;;;;;;250
+18;Isa;;;;;;3
+19;Jamily;;;;;;999
