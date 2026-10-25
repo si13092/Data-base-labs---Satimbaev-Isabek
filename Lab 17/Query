@@ -1,0 +1,39 @@
+postgres=# select * from exams;
+ ex_name  |  ex_prof  | ex_level
+----------+-----------+----------
+ Dis_math | Sklyar    |        5
+ Mat_anal | Dolmatova |        7
+ OOP      | Toksoitov |        8
+(3 rows)
+
+COPY exams TO 'C:/temp/exams.csv' WITH CSV HEADER;
+COPY 3
+
+COPY exams(ex_name, ex_prof, ex_level) 
+FROM 'C:/temp/exams.csv' WITH CSV HEADER;
+COPY 3
+
+postgres=# select * from exams;
+ ex_name  |  ex_prof  | ex_level
+----------+-----------+----------
+ Dis_math | Sklyar    |        5
+ Mat_anal | Dolmatova |        7
+ OOP      | Toksoitov |        8
+ Dis_math | Sklyar    |        5
+ Mat_anal | Dolmatova |        7
+ OOP      | Toksoitov |        8
+(6 rows)
+
+COPY (select * from exams where ex_level >= 6) TO 'C:/temp/exams6.csv' WITH CSV HEADER;
+COPY 4
+
+COPY boys TO 'C:/temp/boys.csv' 
+WITH CSV HEADER DELIMITER ';' QUOTE '"';
+COPY 13
+
+PS C:\Users\isa88> cd "C:\Program Files\PostgreSQL\18\bin"
+PS C:\Program Files\PostgreSQL\18\bin> .\pg_dump.exe -U postgres -h localhost -F c -d postgres -f C:/temp/postgres.dump
+
+CREATE DATABASE restore_test;
+CREATE DATABASE
+PS C:\Program Files\PostgreSQL\18\bin> .\pg_restore.exe -U postgres -h localhost -d restore_test C:/temp/postgres.dump
