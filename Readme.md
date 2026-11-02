@@ -1,5 +1,14 @@
 This repository contains my labs:
 
+| Labs | Topics |
+|----------|----------|
+| 2 | Installing PostgreSQL and pgAdmin |
+| 3 | Basic psql Commands |
+
+
+
+
+
 Lab 2: Installing PostgreSQL and pgAdmin
 Lab 3: Basic psql Commands
 Lab 4: First SQL Query
